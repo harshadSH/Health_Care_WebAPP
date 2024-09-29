@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Home</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f4f7;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        h1 {
+            font-size: 3em;
+            color: #333;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        h1::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 5px;
+            background-color: #4CAF50;
+            margin: 10px auto;
+        }
+        .container {
+            width: 80%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-gap: 20px;
+            animation: slideIn 1s ease-out;
+        }
+        .card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+        }
+        .card-title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #4CAF50;
+        }
+        .card-description {
+            font-size: 1em;
+            margin-bottom: 20px;
+            color: #666;
+        }
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 50px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .button:hover {
+            background-color: #45a049;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        @keyframes slideIn {
+            0% { transform: translateY(100px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Patient Portal</h1>
+    <div class="container">
+        <div class="card">
+            <div class="card-title">Book Appointment</div>
+            <div class="card-description">Schedule a new appointment with your preferred doctor.</div>
+            <button class="button" onclick="window.location.href='{% url 'book_appointment' %}'">Book Now</button>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">Medical Records</div>
+            <div class="card-description">View your complete medical history and download reports.</div>
+            <button class="button" onclick="window.location.href='{% url 'appointment_history' %}'">View Records</button>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">Scheduled Appointments</div>
+            <div class="card-description">Check details of your upcoming appointments.</div>
+            <button class="button" onclick="window.location.href='{% url 'scheduled_appointments' %}'">View Appointments</button>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">Doctors</div>
+            <div class="card-description">Explore our list of certified doctors and specialists.</div>
+            <button class="button" onclick="window.location.href='{% url 'doctor_list' %}'">View Doctors</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Breast Cancer Prediction</div>
+            <div class="card-description">Get an AI-based prediction for breast cancer risk.</div>
+            <button class="button" onclick="window.location.href='{% url 'predict' %}'">Predict Now</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Diabetes Prediction</div>
+            <div class="card-description">Check your diabetes risk with a machine-learning prediction tool.</div>
+            <button class="button" onclick="window.location.href='{% url 'diabetes_predict' %}'">Predict Now</button>
+        </div>
+    </div>
+</body>
+</html>

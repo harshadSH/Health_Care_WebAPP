@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Detail</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">  <!-- Link to your CSS -->
+    <style>
+        /* Reset some default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f8fa;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 800px;
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        .container:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        h1 {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #0056b3;
+            position: relative;
+            animation: slideIn 0.6s ease;
+        }
+
+        @keyframes slideIn {
+            0% {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        p strong {
+            color: #0056b3;
+        }
+
+        form {
+            margin-top: 30px;
+        }
+
+        label {
+            font-size: 1rem;
+            color: #333;
+        }
+
+        input[type="text"], input[type="number"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            background-color: #f9f9f9;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
+            border-color: #007bff;
+            background-color: #fff;
+            outline: none;
+        }
+
+        button {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background-color: #218838;
+            transform: translateY(-3px);
+        }
+
+        .start-btn {
+            background-color: #007bff;
+        }
+
+        .start-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .join-btn {
+            display: inline-block;
+            background-color: #17a2b8;
+            color: #fff;
+            padding: 12px 20px;
+            text-align: center;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .join-btn:hover {
+            background-color: #138496;
+            transform: translateY(-3px);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+
+            input[type="text"], input[type="number"], textarea {
+                font-size: 0.9rem;
+            }
+
+            button, .join-btn {
+                font-size: 0.9rem;
+                padding: 10px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Appointment Details</h1>
+        <p><strong>Doctor:</strong> {{ appointment.doctor.user.first_name }} {{ appointment.doctor.user.last_name }}</p>
+        <p><strong>Patient:</strong> {{ appointment.patient.user.first_name }} {{ appointment.patient.user.last_name }}</p>
+        <p><strong>Appointment Date:</strong> {{ appointment.appointment_date }}</p>
+        <p><strong>Symptoms:</strong> {{ appointment.symptoms }}</p>
+        <p><strong>Details:</strong> {{ appointment.details }}</p>
+        <p><strong>Mode:</strong> {{ appointment.appointment_type }}</p>
+
+        <form method="POST">
+            {% csrf_token %}
+            <h2>Update Appointment Details</h2>
+
+            <label for="disease">Disease:</label>
+            <input type="text" name="disease" value="{{ appointment.disease }}"><br>
+
+            <label for="details">Details:</label>
+            <textarea name="details">{{ appointment.details }}</textarea><br>
+
+            <label for="prescription">Prescription:</label>
+            <textarea name="prescription">{{ appointment.prescription }}</textarea><br>
+
+            <label for="doctor_notes">Doctor's Notes:</label>
+            <textarea name="doctor_notes">{{ appointment.doctor_notes }}</textarea><br>
+            
+            <label for="consultation_fees">Fees:</label>
+            <input type="number" name="consultation_fees" value="{{ appointment.consultation_fees }}"><br>
+
+            <button type="submit">Update Appointment</button>
+        </form>
+
+        {% if appointment.appointment_type == "Online" %}
+            {% if appointment.room_id %}
+                <!-- Show Join button only if room_id is generated -->
+                <a href="{% url 'joinroom' appointment.room_id %}" class="join-btn" target="_blank">Join</a>
+            {% else %}
+                <!-- Show Start Appointment button to generate room_id -->
+                <form method="POST" action="{% url 'start_appointment' appointment.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="start-btn">Start Appointment</button>
+                </form>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html>

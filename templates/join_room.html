@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <title>Join Room</title>
+</head>
+<body>
+  <div class="container">
+    <div class="join-room form">
+      <header>Join Room</header>
+      <p>Your Room ID: <strong>{{ room_id }}</strong></p>
+      <a href="{% url 'meeting' room_id=room_id %}" class="button">Join</a>
+      <center>
+        {% if success %}
+        <p style="color: green;"><b>{{ success }}</b></p>
+        {% endif %}
+        {% if error %}
+        <p style="color: red;">{{ error }}</p>
+        {% endif %}
+      </center>
+    </div>
+  </div>
+</body>
+</html>

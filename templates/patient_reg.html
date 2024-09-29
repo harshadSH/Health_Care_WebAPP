@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Registration</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    /* Custom Shadow */
+    .custom-shadow {
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.40);
+    }
+    /* Image container for perfect fit and aspect ratio */
+    .image-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .image-container img {
+      width: auto;
+      height: 70%;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-r from-blue-100 via-white-100 to-green-100 flex justify-center items-center py-10">
+
+  <div class="bg-white p-10 rounded-2xl custom-shadow transition-shadow duration-300 ease-in-out w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8">
+
+    <!-- Left Side: Form -->
+    <div class="p-8">
+      <h2 class="text-4xl font-extrabold text-center mb-6 text-blue-600">Patient Registration</h2>
+
+      <form id="doctorForm" class="space-y-6" method="POST" action="{% url 'patient_reg' %}">
+        {% csrf_token %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <!-- Full Name -->
+          <div>
+            <label class="text-lg font-semibold">First Name</label>
+            <input type="text" id="first_name" name="first_name" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full" placeholder="Enter your First Name" required/>
+          </div>
+
+          <div>
+            <label class="text-lg font-semibold">Last Name</label>
+            <input type="text" id="last_name" name="last_name" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full" placeholder="Enter your last name" />
+          </div>
+
+          <!-- Specialization -->
+          <div>
+            <label class="text-lg font-semibold">Date of Birth</label>
+            <input type="date" id="date_of_birth" name="date_of_birth" class="p-3 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300" />
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label class="text-lg font-semibold">Email Address</label>
+            <input type="email" id="email" name="email" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full" placeholder="Enter your email" />
+          </div>
+
+          <!-- Phone -->
+          <div>
+            <label class="text-lg font-semibold">Phone Number</label>
+            <input type="tel" id="phone_number" name="phone_number" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full" placeholder="Enter your phone number" />
+          </div>
+
+          <div>
+            <label class="text-lg font-semibold">Password</label>
+            <input type="password" id="password" name="password" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full" placeholder="Enter your password" />
+          </div>
+
+          <div>
+            <label class="text-lg font-semibold">Conform Password</label>
+            <input type="password" id="confirm_password" name="confirm_password" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full" placeholder="confirm password" />
+          </div>
+
+
+          <!-- blood group -->
+        
+
+          <!-- Clinic Address -->
+
+          <!-- Available Timings -->
+        </div>
+
+
+        <label class="text-lg font-semibold">Gender</label>
+        <div class="space-x-4 mt-2">
+          <label><input type="radio" name="gender" value="male" class="mr-2"/> Male</label>
+          <label><input type="radio" name="gender" value="female" class="mr-2"/> Female</label>
+          <label><input type="radio" name="gender" value="other" class="mr-2"/> Other</label>
+        </div>
+
+        <!-- Profile Picture -->
+        <div class="mt-4">
+          <label class="text-lg font-semibold">Profile Picture</label>
+          <input type="file" name="profile_picture" id="profilePicture" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full" />
+        </div>
+
+        <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg mt-6 hover:bg-blue-700 transition-all duration-300">
+          Register
+        </button>
+      </form>
+
+      {% if error_message %}
+    <p style="color:red;">{{ error_message }}</p>
+    {% endif %}
+
+    </div>
+
+    <!-- Right Side: Illustration -->
+    <div class="image-container ">
+        {% load static %}
+      <img src="{% static 'patient_reg.jpeg' %}" alt="register" />
+    </div>
+
+  </div>
+
+</body>
+</html>
+

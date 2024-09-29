@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breast Cancer Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            text-align: center;
+            padding: 50px;
+            background-image: url(img/doctor-with-stethoscope-hands-hospital-background.jpg);
+            z-index: 0;
+        }
+
+        h1 {
+            font-size: 45px;
+            padding-bottom: 20px;
+            color: #2c3e50;
+            animation: fadeInDown 1s;
+        }
+
+        #predictionForm {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px; /* Gap between rows and columns */
+            background-color: rgb(28, 121, 242);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch; /* Ensure input elements stretch equally */
+            width: 100%;
+        }
+
+        label {
+            font-size: 18px;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #bdc3c7;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        input[type="number"]:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        button {
+            grid-column: span 2; /* Button spans both columns */
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 150px;
+            margin-left: 330px;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Modal styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 15px;
+            font-size: 1.25rem;
+            color: #333;
+        }
+
+        /* Keyframes for animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Breast Cancer Prediction</h1>
+    <form id="predictionForm" method="POST" action="/predict/">
+        {% csrf_token %}
+        <div>
+            <label for="mean_radius">Mean Radius:</label>
+            <input type="number" step="any" id="mean_radius" name="mean_radius" required>
+        </div>
+        <div>
+            <label for="mean_texture">Mean Texture:</label>
+            <input type="number" step="any" id="mean_texture" name="mean_texture" required>
+        </div>
+        <div>
+            <label for="mean_perimeter">Mean Perimeter:</label>
+            <input type="number" step="any" id="mean_perimeter" name="mean_perimeter" required>
+        </div>
+        <div>
+            <label for="mean_area">Mean Area:</label>
+            <input type="number" step="any" id="mean_area" name="mean_area" required>
+        </div>
+        <div>
+            <label for="mean_compactness">Mean Compactness:</label>
+            <input type="number" step="any" id="mean_compactness" name="mean_compactness" required>
+        </div>
+        <div>
+            <label for="mean_concavity">Mean Concavity:</label>
+            <input type="number" step="any" id="mean_concavity" name="mean_concavity" required>
+        </div>
+        <div>
+            <label for="worst_radius">Worst Radius:</label>
+            <input type="number" step="any" id="worst_radius" name="worst_radius" required>
+        </div>
+        <div>
+            <label for="worst_perimeter">Worst Perimeter:</label>
+            <input type="number" step="any" id="worst_perimeter" name="worst_perimeter" required>
+        </div>
+        <div>
+            <label for="worst_area">Worst Area:</label>
+            <input type="number" step="any" id="worst_area" name="worst_area" required>
+        </div>
+        <div>
+            <label for="worst_concavity">Worst Concavity:</label>
+            <input type="number" step="any" id="worst_concavity" name="worst_concavity" required>
+        </div>
+        <button type="submit">Predict</button>
+    </form>
+
+    <!-- Modal for displaying result -->
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Prediction Result</h2>
+            <div id="result"></div>
+        </div>
+    </div>
+
+    <script>
+        // Open modal function
+        function openModal() {
+            document.getElementById('resultModal').style.display = 'flex';
+        }
+
+        // Close modal function
+        function closeModal() {
+            document.getElementById('resultModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside the modal content
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('resultModal')) {
+                closeModal();
+            }
+        }
+
+        // Close modal when clicking on close button
+        document.querySelector('.close-btn').onclick = function() {
+            closeModal();
+        };
+
+        // Handle form submission
+        document.getElementById('predictionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(document.getElementById('predictionForm'));
+            const data = new URLSearchParams();
+            for (const pair of formData) {
+                data.append(pair[0], pair[1]);
+            }
+
+            fetch('/predict/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: data
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.prediction) {
+                    document.getElementById('result').innerText = `Prediction: ${data.prediction}`;
+                    openModal();  // Open modal to display result
+                } else {
+                    document.getElementById('result').innerText = 'Error: Prediction failed.';
+                    openModal();  // Open modal to display error
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = 'Error fetching prediction.';
+                openModal();  // Open modal to display error
+            });
+        });
+    </script>
+</body>
+</html>
+``

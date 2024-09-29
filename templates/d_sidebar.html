@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Sidebar</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Sidebar styling */
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: -250px; /* Initially hidden */
+            width: 250px;
+            height: 100%;
+            background: linear-gradient(135deg, #4CAF50, #2196F3); /* Gradient background */
+            padding: 20px;
+            box-sizing: border-box;
+            transition: all 0.4s ease;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        #sidebar.open {
+            left: 0; /* Show sidebar */
+        }
+
+        /* Toggle button for sidebar */
+        #toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 0;
+            background-color: #333;
+            color: #fff;
+            padding: 10px 15px;
+            cursor: pointer;
+            z-index: 999;
+            transition: all 0.4s ease;
+            border-radius: 0 5px 5px 0;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #toggle-btn.open {
+            left: 250px; /* Moves the toggle button when sidebar is open */
+        }
+
+        #toggle-btn:hover {
+            background-color: #555; /* Subtle hover effect */
+        }
+
+        /* Profile Information */
+        #profile-info {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .profile-picture {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            margin: 0 auto 15px;
+            overflow: hidden; /* Ensures image fits */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); /* Added shadow */
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #profile-info p {
+            color: #fff;
+            margin: 0;
+        }
+
+        #profile-info p:first-child {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        /* Sidebar Navigation */
+        #sidebar ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #sidebar ul li {
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            transition: background-color 0.3s ease;
+        }
+
+        #sidebar ul li:last-child {
+            border-bottom: none;
+        }
+
+        #sidebar ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            display: block;
+            padding-left: 10px;
+            position: relative;
+            transition: color 0.3s ease, padding-left 0.3s ease;
+        }
+
+        #sidebar ul li a:before {
+            content: "→";
+            position: absolute;
+            left: -20px;
+            color: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        #sidebar ul li:hover a {
+            color: #f0f0f0;
+            padding-left: 20px; /* Smooth padding transition */
+        }
+
+        #sidebar ul li:hover a:before {
+            opacity: 1;
+        }
+
+        /* Logout Button */
+        #logoutForm {
+            margin-top: auto; /* Pushes the logout button to the bottom */
+        }
+
+        #logoutButton {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 5px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #logoutButton:hover {
+            background-color: #e53935;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* Enhanced hover shadow */
+        }
+
+        /* Sidebar header styling */
+        #sidebar h2 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Main content styling */
+        
+        
+
+        #sidebar.open ~ main {
+            margin-left: 250px; /* Adjust the main content when sidebar is open */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            #sidebar {
+                width: 200px;
+                left: -200px;
+            }
+
+            #sidebar.open {
+                left: 0;
+            }
+
+            #toggle-btn.open {
+                left: 200px;
+            }
+
+            #sidebar h2 {
+                font-size: 1.5rem;
+            }
+
+            #sidebar ul li a {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Sidebar content -->
+<div id="sidebar">
+    <div id="profile-info">
+        <div class="profile-picture">
+            <img src="{{ doctor.profile_picture.url }}" alt="Profile Picture">
+        </div>
+        <p></p>
+        <p>Doctor</p>
+    </div>
+
+    <ul>
+        <li><a href="{% url 'doctor_appointments' %}">📅 View Appointments</a></li>
+        <li><a href="{% url 'doctor_profile' %}">👤 My Profile</a></li>
+        <li><a href="#">👥 Manage Patients</a></li>
+        <li><a href="{% url 'appointment_history' %}">📜 Appointment History</a></li>
+        <li><a href="{% url 'logout' %}">🔓 Logout</a></li>
+    </ul>
+</div>
+
+<!-- Main content block -->
+<main>
+    {% block content %}
+    <!-- Patient dashboard content will go here -->
+    {% endblock %}
+</main>
+
+<!-- Toggle button to open/close the sidebar -->
+<div id="toggle-btn" onclick="toggleSidebar()">☰</div>
+
+<!-- Script to toggle the sidebar visibility -->
+<script>
+    function toggleSidebar() {
+        var sidebar = document.getElementById('sidebar');
+        var toggleBtn = document.getElementById('toggle-btn');
+        sidebar.classList.toggle('open');
+        toggleBtn.classList.toggle('open');
+    }
+</script>
+
+</body>
+</html>
